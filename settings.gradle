@@ -1,0 +1,2 @@
+include ':app', ':mylibrary', ':mylibrary', ':netlibrary', ':mylibrary', ':netlibrary', ':httplibrary'
+include ':sMSSDK'
