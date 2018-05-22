@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_rankings"
+    android:layout_width="match_parent"
+    android:layout_marginTop="40px"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <TextView
+        android:text="ID"
+        android:textSize="38px"
+        android:padding="20px"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="手机号"
+        android:textSize="38px"
+        android:padding="20px"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="地区"
+        android:textSize="38px"
+        android:padding="20px"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="总资产"
+        android:textSize="38px"
+        android:padding="20px"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+</LinearLayout>

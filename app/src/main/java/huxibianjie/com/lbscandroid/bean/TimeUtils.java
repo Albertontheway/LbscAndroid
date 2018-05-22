@@ -15,8 +15,9 @@ public class TimeUtils {
      * @return    
      */        
     public static String getNowTime(){        
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
+        Log.e("当前时间-----",""+date.toString());
         return simpleDateFormat.format(date);        
     }        
     /**    

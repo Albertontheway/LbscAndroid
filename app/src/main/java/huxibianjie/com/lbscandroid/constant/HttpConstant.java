@@ -13,6 +13,10 @@ public class HttpConstant {
     //测试服务器url
     private static final String URL = "http://182.92.99.198:8081/hp/api/";
 
+    //获取验证码
+    public static String POST_SENTCODE = URL + "user/sentcode";
+    //登录
     public static String POST_LOGIN = URL + "user/login";
+    //提交数据
     public static String POST_SEVEDATES = URL + "daily/create";
 }

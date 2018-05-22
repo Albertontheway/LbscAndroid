@@ -6,10 +6,11 @@ package huxibianjie.com.lbscandroid.bean;
 
 public class PostLogin {
 
+
     /**
      * errcode : 0
      * errmsg : OK
-     * content : {"phone":"13718952453","name":"lyy"}
+     * content : {"seckey":"eeXiGmaozdP3","phone":"15313545607"}
      */
 
     private int errcode;
@@ -42,12 +43,20 @@ public class PostLogin {
 
     public static class ContentBean {
         /**
-         * phone : 13718952453
-         * name : lyy
+         * seckey : eeXiGmaozdP3
+         * phone : 15313545607
          */
 
+        private String seckey;
         private String phone;
-        private String name;
+
+        public String getSeckey() {
+            return seckey;
+        }
+
+        public void setSeckey(String seckey) {
+            this.seckey = seckey;
+        }
 
         public String getPhone() {
             return phone;
@@ -55,14 +64,6 @@ public class PostLogin {
 
         public void setPhone(String phone) {
             this.phone = phone;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
     }
 }

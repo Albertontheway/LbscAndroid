@@ -4,33 +4,61 @@
     android:id="@+id/top_bar_linear"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg5_blue"
-
    >
 
     <RelativeLayout
         android:id="@+id/ll_top"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        >
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="70px"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/linearLayout"
+                android:text="LBSC"
+                android:textColor="@color/white"
+                android:textSize="80px"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tv_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:text="出行数据挖矿"
-        android:gravity="center"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"
-        android:textColor="@color/text1_white"
-        android:singleLine="true"
-        />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20px"
+                android:text="行走中的区块链"
+                android:textColor="@color/white"
+                android:textSize="32px" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:paddingRight="50dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="资产 "
+                android:textColor="@color/white"
+                android:textSize="38px" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00"
+                android:textColor="@color/white"
+                android:textSize="36px" />
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

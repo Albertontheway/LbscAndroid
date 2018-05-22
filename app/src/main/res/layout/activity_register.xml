@@ -13,9 +13,9 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="vertical"
+        tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:ignore="MissingConstraints">
+        tools:layout_editor_absoluteY="0dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                 android:background="@color/transparent"
                 android:ems="19"
                 android:hint="请输入手机号"
-                android:inputType="phone"
+                android:inputType="number|phone"
                 android:padding="1dp"
                 android:textSize="12sp"></EditText>
 
@@ -126,7 +126,7 @@
                 android:background="@drawable/sekector_button"
                 android:text="获取验证码"
                 android:textColor="@color/text5_black"
-                android:textSize="8dp" />
+                android:textSize="8sp" />
         </RelativeLayout>
 
 
@@ -135,23 +135,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp">
 
-            <Button
-                android:background="@drawable/sekector_button"
-                android:id="@+id/Login_button"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="50dp"
-                android:text="登录" />
 
             <Button
                 android:id="@+id/Register_button"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:background="@drawable/sekector_button"
-                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
                 android:layout_marginRight="40dp"
-                android:text="注册" />
+                android:background="@drawable/sekector_button"
+                android:text="登录" />
         </RelativeLayout>
 
     </LinearLayout>

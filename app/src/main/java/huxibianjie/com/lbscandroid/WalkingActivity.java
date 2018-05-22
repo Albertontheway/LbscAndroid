@@ -16,18 +16,28 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.okhttp.Request;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import huxibianjie.com.lbscandroid.bean.TimeUtils;
+import huxibianjie.com.lbscandroid.constant.HttpConstant;
+import huxibianjie.com.lbscandroid.constant.OkHttpClientManager;
 import huxibianjie.com.lbscandroid.pedomemter.StepService;
 import huxibianjie.com.lbscandroid.util.AppUtils;
 import huxibianjie.com.lbscandroid.util.Constant;
@@ -39,36 +49,29 @@ import huxibianjie.com.lbscandroid.util.DensityUtil;
 
 public class WalkingActivity extends AppCompatActivity implements Handler.Callback {
 
-    //@BindView(R.id.rl_back) RelativeLayout rlBack;//返回
-    @BindView(R.id.tv_top)
-    TextView tvTop;
     //@BindView(R.id.rl_Right) RelativeLayout rlRight;
     @BindView(R.id.ll_top)
     RelativeLayout llTop;
     @BindView(R.id.top_bar_linear)
     LinearLayout topBarLinear;
-
     @BindView(R.id.step_count)
     TextView stepCount;      //计算步数
     @BindView(R.id.calories)
     TextView calories;         //热量千卡
-    @BindView(R.id.tv_calories)
-    TextView tvCalories;
-    @BindView(R.id.iv_time)
-    ImageView ivTime;
-    @BindView(R.id.time)
-    TextView time;                 //分钟
-    @BindView(R.id.tv_time)
-    TextView tvTime;
+
+
 
     public static final String WALKCAMPID = "walkCampId";
-    @BindView(R.id.History)
-    TextView mHistory;
-    @BindView(R.id.RankingList)
-    TextView mRankingList;
+
     @BindView(R.id.Relativelist)
     RelativeLayout mRelativelist;
-    private long step = 0;
+    @BindView(R.id.share_imageButton)
+    ImageView mShareImageButton;
+    @BindView(R.id.manry_count)
+    TextView mManryCount;
+    @BindView(R.id.Calculation_Button)
+    Button mCalculationButton;
+    private long stepnumber = 0;
     private long lastStep = 0;
     private boolean isPause = false;
     private boolean isStart = false;
@@ -93,6 +96,7 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
 
         }
     };
+
     ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -118,6 +122,7 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
         setContentView(R.layout.activity_walking);
         ButterKnife.bind(this);
         initView();
+        TimeUtils.getNowTime();
     }
 
 
@@ -126,10 +131,10 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
         lastStep = sp.getInt(Constant.Config.stepNum, 0);
         delayHandler = new Handler(this);
 //        if (sp.getBoolean(Constant.Config.isStepServiceRunning, false)) {
-         setupService();
+        setupService();
 //        }
         topBarLinear.setBackgroundColor(0);
-        tvTop.setText("出行数据挖矿");
+
         if (Build.VERSION.SDK_INT > 18) {
             AppUtils.initSystemBar(this);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llTop.getLayoutParams();
@@ -137,9 +142,9 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
             llTop.setLayoutParams(params);
             topBarLinear.setPadding(0, AppUtils.getStatusBarHeight(this), 0, 0);
         }
-        stepCount.setText(String.valueOf(step));
+        stepCount.setText(String.valueOf(stepnumber));
 
-        calories.setText(String.valueOf(stepToKcal(step)));
+        calories.setText(String.valueOf(stepToKcal(stepnumber)));
     }
 
 
@@ -148,10 +153,27 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
         switch (msg.what) {
 
             case Constant.Config.MSG_FROM_SERVER:
-                step = Long.valueOf(String.valueOf(msg.getData().get(Constant.Config.stepNum))) + lastStep/2;
-                stepCount.setText(String.valueOf(step));
-                calories.setText(String.valueOf(stepToKcal(step)));
-                time.setText(String.valueOf(this.timemm));
+                stepnumber = Long.valueOf(String.valueOf(msg.getData().get(Constant.Config.stepNum))) - lastStep / 2;
+                int money = 100;
+                if (stepnumber != 0) {
+
+                } else {
+                    String url = HttpConstant.POST_SEVEDATES + "?day=" + TimeUtils.getNowTime() + "&step=" + stepnumber + "&money=" + money;
+                    Log.e("time", "" + TimeUtils.getNowTime());
+                    OkHttpClientManager.getAsyn(HttpConstant.POST_SEVEDATES, new OkHttpClientManager.ResultCallback<String>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                            Log.e("aaaaa", "--------" + request);
+                        }
+
+                        @Override
+                        public void onResponse(String response) {
+                            Log.e("bbbbbbbbbbbbbbbb", "--------" + response);
+                        }
+                    });
+                }
+                stepCount.setText(String.valueOf(stepnumber));
+                calories.setText(String.valueOf(stepToKcal(stepnumber)));
                 delayHandler.sendEmptyMessageDelayed(Constant.Config.REQUEST_SERVER, TIME_INTERVAL);
                 break;
             case Constant.Config.REQUEST_SERVER:
@@ -197,16 +219,46 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
     }
 
 
-//点击事件，历史记录，排行榜，listview
-    @OnClick({R.id.History, R.id.RankingList, R.id.Relativelist})
+    //session 统计
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    private long exitTime = 0;//初始时间变量LONG
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+//                finish();
+//                System.exit(0);
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    //点击事件，历史记录，排行榜，listview
+    @OnClick({R.id.Relativelist})
     public void onClick(View v) {
         switch (v.getId()) {
             default:
                 break;
-            case R.id.History:
-                break;
-            case R.id.RankingList:
-                break;
+
             case R.id.Relativelist:
                 break;
         }

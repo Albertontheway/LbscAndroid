@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,29 +21,29 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mob.MobSDK;
+import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
 import huxibianjie.com.lbscandroid.R;
 import huxibianjie.com.lbscandroid.WalkingActivity;
+import huxibianjie.com.lbscandroid.bean.PostLogin;
 import huxibianjie.com.lbscandroid.constant.HttpConstant;
+import huxibianjie.com.lbscandroid.constant.OkHttpClientManager;
 import huxibianjie.com.lbscandroid.util.AppUtils;
 import huxibianjie.com.lbscandroid.util.DensityUtil;
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -59,37 +60,26 @@ public class RegisterActivity extends AppCompatActivity {
     EditText mPhoneCode;
     @BindView(R.id.get_code)
     Button mGetCode;
-    @BindView(R.id.Login_button)
-    Button mLoginButton;
+//    @BindView(R.id.Login_button)
+//    Button mLoginButton;
     @BindView(R.id.Register_button)
     Button mRegisterButton;
     @BindView(R.id.top_bar_linear)
     LinearLayout topBarLinear;
-    @BindView(R.id.tv_top)
-    TextView tvTop;
     @BindView(R.id.ll_top)
     RelativeLayout llTop;
     private  int i=60;
     String phoneNums;
-    String time;
-    String APPKEY = "25aff7de03a90";
-    String APPSECRETE = "4baa12406874cd5883eda4c557ad40fe";
     private OkHttpClient client;
+    private Object charSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         initView();
-        init();
         initOkHttp();
-        new Thread(){
-            public void run() {
-
-                time = Local2UTC("2018-03-19 19:41:44");
-
-            };
-        }.start();
     }
     private void initOkHttp() {
         client = new OkHttpClient.Builder()
@@ -101,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void initView() {
 
         topBarLinear.setBackgroundColor(0);
-        tvTop.setText("出行数据挖矿");
+
         if (Build.VERSION.SDK_INT > 18) {
             AppUtils.initSystemBar(this);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llTop.getLayoutParams();
@@ -112,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.phonenumber, R.id.del_phonenumber, R.id.phone_code, R.id.get_code, R.id.Login_button, R.id.Register_button})
+    @OnClick({R.id.phonenumber, R.id.del_phonenumber, R.id.phone_code, R.id.get_code, R.id.Register_button})
     public void onClick1(View v) {
         Intent intent;
         phoneNums = mPhonenumber.getText().toString();
@@ -125,19 +115,37 @@ public class RegisterActivity extends AppCompatActivity {
                 break;
             case R.id.phone_code:
                 break;
-            case R.id.Login_button:
-                intent = new Intent(this, WalkingActivity.class);
-                startActivity(intent);
-                break;
+//            case R.id.Login_button:
+//                intent = new Intent(this, WalkingActivity.class);
+//                startActivity(intent);
+//                break;
 
             case R.id.get_code:
                 // 1. 通过规则判断手机号
                 if (!judgePhoneNums(phoneNums)) {
                     return;
-                } // 2. 通过sdk发送短信验证
-                SMSSDK.getVerificationCode("86", phoneNums);
+                }
 
-                // 3. 把按钮变成不可点击，并且显示倒计时（正在获取）
+        RequestBody requestBodyPostcode = new FormBody.Builder()
+                        .add("phone", phoneNums)
+                        .build();
+                Request requestPostcode = new Request.Builder()
+                        .url(HttpConstant.POST_SENTCODE)
+                        .post(requestBodyPostcode)
+                        .build();
+                client.newCall(requestPostcode).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+
+                    }
+                });
+
+                // 2. 把按钮变成不可点击，并且显示倒计时（正在获取）
                 mGetCode.setClickable(false);
                 mGetCode.setText("重新发送(" + i + ")");
                 new Thread(new Runnable() {
@@ -161,9 +169,43 @@ public class RegisterActivity extends AppCompatActivity {
 
             case R.id.Register_button:
                 //将收到的验证码和手机号提交再次核对
-                SMSSDK.submitVerificationCode("86", phoneNums, mPhoneCode.getText().toString());
-                createProgressBar();
-                break;
+//                SMSSDK.submitVerificationCode("86", phoneNums, mPhoneCode.getText().toString());
+//                createProgressBar();
+                //获取输入框
+                String code = mPhoneCode.getText().toString();
+
+                //拼接字符串url
+                String loading_url =HttpConstant.POST_LOGIN+"?phone="+phoneNums+"&valicode="+code;
+
+                OkHttpClientManager.getAsyn(loading_url, new OkHttpClientManager.ResultCallback<String>() {
+                    @Override
+                    public void onError(com.squareup.okhttp.Request request, Exception e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(final String response) {
+                        Log.e("aaaaaaaaaa","-----"+response);
+                        Gson gson = new Gson();
+                        PostLogin postLogin = gson.fromJson(response, PostLogin.class);
+                        String errmsg = postLogin.getErrmsg();
+                        if (!errmsg.equals("OK")) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(RegisterActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }else {
+                            Intent intent = new Intent(RegisterActivity.this,
+                                    WalkingActivity.class);
+                            intent.putExtra(postLogin.getContent().getSeckey(), "userSeckey");
+                            startActivity(intent);
+                        }
+
+                    }
+                });
+               break;
 
         }
 
@@ -209,21 +251,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-public void init() {
-    MobSDK.init(this, APPKEY, APPSECRETE);
-    EventHandler eventHandler = new EventHandler() {
-        @Override
-        public void afterEvent(int event, int result, Object data) {
-            Message msg = new Message();
-            msg.arg1 = event;
-            msg.arg2 = result;
-            msg.obj = data;
-            handler.sendMessage(msg);
-        }
-    };
-    //注册回调监听接口
-    SMSSDK.registerEventHandler(eventHandler);
-}
+
 
 //    @Override
 //    public void onClick(View v) {
@@ -284,43 +312,6 @@ public void init() {
                 int result = msg.arg2;
                 Object data = msg.obj;
                 Log.e("event", "event=" + event);
-                if (result == SMSSDK.RESULT_COMPLETE) {
-                    // 短信注册成功后，返回MainActivity,然后提示
-                    if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {// 提交验证码成功
-                        Toast.makeText(getApplicationContext(), "提交验证码成功",
-                                Toast.LENGTH_SHORT).show();
-                        final String mPhoneN=mPhonenumber.getText().toString();
-                        String code = mPhoneCode.getText().toString();
-
-                        RequestBody requestBodyPost = new FormBody.Builder()
-                                .add("phone", mPhoneN)
-                                .add("valicode",code)
-                                .build();
-                        Request requestPost = new Request.Builder()
-                                .url(HttpConstant.POST_LOGIN)
-                                .post(requestBodyPost)
-                                .build();
-                        client.newCall(requestPost).enqueue(new okhttp3.Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                Intent intent = new Intent(RegisterActivity.this,
-                                        WalkingActivity.class);
-                                intent.putExtra(mPhoneN,"userPhonenumber");
-                                startActivity(intent);
-                            }
-                        });
-                        finish();
-                    } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-                        Toast.makeText(getApplicationContext(), "正在获取验证码",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        ((Throwable) data).printStackTrace();
-                    }
-                }
             }
         }
     };
@@ -383,14 +374,6 @@ public void init() {
             return mobileNums.matches(telRegex);
     }
 
-    //获取时间转化
-    public String Local2UTC(String strDate){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String gmtTime = "";
-        sdf.setTimeZone(TimeZone.getTimeZone("gmt"));
-        gmtTime = sdf.format(stringToDate(strDate, "yyyy-MM-dd HH:mm:ss"));
-        return gmtTime;
-    }
     /**
      * 将string类型转换为date类型
      * @param strTime：要转换的string类型的时间，时间格式必须要与formatType的时间格式相同
@@ -408,9 +391,43 @@ public void init() {
         }
         return date;
     }
+
+
+    //session 统计
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    private long exitTime = 0;//初始时间变量LONG
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+//                finish();
+//                System.exit(0);
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+
     @Override
     protected void onDestroy() {
-        SMSSDK.unregisterAllEventHandler();
         super.onDestroy();
     }
 }
