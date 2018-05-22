@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/activity_walking_backgroud"
+    android:background="@mipmap/background_register"
     tools:context="huxibianjie.com.lbscandroid.Activity.RegisterActivity">
 
-    <include layout="@layout/top_bar" />
+    <include layout="@layout/top_bar2" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
@@ -20,31 +20,11 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="50dp"
+            android:layout_marginTop="120dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:background="@drawable/rectangle_shape">
+            >
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:lines="1"
-                android:padding="1dp"
-                android:text="手机号"
-                android:textSize="11sp" />
-
-            <View
-                android:id="@+id/Phone_id"
-                android:layout_width="1dip"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_toRightOf="@+id/textView1"
-                android:background="#EEEFFF" />
 
             <EditText
                 android:id="@+id/phonenumber"
@@ -52,7 +32,6 @@
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="2dp"
-                android:layout_toRightOf="@+id/Phone_id"
                 android:background="@color/transparent"
                 android:ems="19"
                 android:hint="请输入手机号"
@@ -64,9 +43,9 @@
                 android:id="@+id/del_phonenumber"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignEnd="@+id/phonenumber"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="3dp"
+                android:layout_marginEnd="9dp"
                 android:src="@mipmap/del_button"
                 android:visibility="invisible" />
         </RelativeLayout>
@@ -77,29 +56,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/rectangle_shape">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:lines="1"
-                android:padding="1dp"
-                android:text="验证码"
-                android:textSize="11sp" />
-
-            <View
-                android:id="@+id/Phone_code"
-                android:layout_width="1dip"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_toRightOf="@+id/textView2"
-                android:background="#EEEFFF" />
+            >
 
             <EditText
                 android:id="@+id/phone_code"
@@ -107,8 +64,6 @@
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="2dp"
-                android:layout_toRightOf="@+id/Phone_code"
-                android:background="@color/transparent"
                 android:ems="19"
                 android:hint="请输入验证码"
                 android:inputType="phone"
@@ -119,13 +74,13 @@
 
             <Button
                 android:id="@+id/get_code"
-                android:layout_width="70dp"
-                android:layout_height="28dp"
+                android:layout_width="79dp"
+                android:layout_height="38dp"
                 android:layout_alignEnd="@+id/phone_code"
                 android:layout_centerVertical="true"
-                android:background="@drawable/sekector_button"
+                android:background="@color/text5_black"
                 android:text="获取验证码"
-                android:textColor="@color/text5_black"
+                android:textColor="@color/white"
                 android:textSize="8sp" />
         </RelativeLayout>
 
@@ -133,7 +88,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp">
+            android:layout_marginTop="120dp">
 
 
             <Button
@@ -142,8 +97,10 @@
                 android:layout_height="40dp"
                 android:layout_centerInParent="true"
                 android:layout_marginRight="40dp"
-                android:background="@drawable/sekector_button"
-                android:text="登录" />
+                android:background="@mipmap/buttonbeijing"
+                android:text="登录"
+                android:textColor="@color/white"
+                android:textSize="48px" />
         </RelativeLayout>
 
     </LinearLayout>

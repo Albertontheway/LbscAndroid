@@ -22,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,6 +34,7 @@ import com.umeng.analytics.MobclickAgent;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import huxibianjie.com.lbscandroid.Activity.RegisterActivity;
 import huxibianjie.com.lbscandroid.bean.TimeUtils;
 import huxibianjie.com.lbscandroid.constant.HttpConstant;
 import huxibianjie.com.lbscandroid.constant.OkHttpClientManager;
@@ -70,7 +70,7 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
     @BindView(R.id.manry_count)
     TextView mManryCount;
     @BindView(R.id.Calculation_Button)
-    Button mCalculationButton;
+    ImageView mCalculationButton;
     private long stepnumber = 0;
     private long lastStep = 0;
     private boolean isPause = false;
@@ -121,6 +121,7 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_walking);
         ButterKnife.bind(this);
+//        mCalculationButton.setAlpha(0.5f);
         initView();
         TimeUtils.getNowTime();
     }
@@ -138,7 +139,7 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
         if (Build.VERSION.SDK_INT > 18) {
             AppUtils.initSystemBar(this);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llTop.getLayoutParams();
-            params.height = DensityUtil.Dp2Px(this, 35);
+            params.height = DensityUtil.Dp2Px(this, 55);
             llTop.setLayoutParams(params);
             topBarLinear.setPadding(0, AppUtils.getStatusBarHeight(this), 0, 0);
         }
@@ -253,13 +254,20 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
 
 
     //点击事件，历史记录，排行榜，listview
-    @OnClick({R.id.Relativelist})
+    @OnClick({R.id.Relativelist,R.id.Calculation_Button})
     public void onClick(View v) {
         switch (v.getId()) {
             default:
                 break;
 
             case R.id.Relativelist:
+                break;
+
+            case R.id.Calculation_Button:
+                if (true){
+                    Intent intent = new Intent(this, RegisterActivity.class);
+                    startActivity(intent);
+                }
                 break;
         }
     }

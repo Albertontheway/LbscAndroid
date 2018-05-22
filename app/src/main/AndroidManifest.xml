@@ -2,14 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="huxibianjie.com.lbscandroid">
 
+    <uses-sdk android:minSdkVersion="8" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-sdk android:minSdkVersion="8"></uses-sdk>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -37,7 +37,7 @@
         android:screenOrientation="nosensor"
         android:supportsRtl="true"
         android:theme="@style/AppThemeNoActionBar">
-        <activity android:name=".WalkingActivity">
+        <activity android:name=".Activity.StateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,8 +46,10 @@
         </activity>
 
         <service android:name=".pedomemter.StepService" />
-        <activity android:name=".Activity.RegisterActivity"
-            android:theme="@style/AppThemeNoActionBar"></activity>
+
+        <activity
+            android:name=".Activity.RegisterActivity"
+            android:theme="@style/AppThemeNoActionBar" />
 
         <meta-data
             android:name="YOUR_APP_KEY"
@@ -56,6 +58,7 @@
             android:name="Channel ID"
             android:value="UMENG_CHANNEL" />
 
+        <activity android:name=".WalkingActivity"></activity>
     </application>
 
 </manifest>

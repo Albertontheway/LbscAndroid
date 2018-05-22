@@ -64,9 +64,9 @@ public class RegisterActivity extends AppCompatActivity {
 //    Button mLoginButton;
     @BindView(R.id.Register_button)
     Button mRegisterButton;
-    @BindView(R.id.top_bar_linear)
+    @BindView(R.id.top_bar_linear2)
     LinearLayout topBarLinear;
-    @BindView(R.id.ll_top)
+    @BindView(R.id.ll_top2)
     RelativeLayout llTop;
     private  int i=60;
     String phoneNums;
