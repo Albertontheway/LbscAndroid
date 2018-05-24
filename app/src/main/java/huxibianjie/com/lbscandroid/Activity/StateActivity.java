@@ -2,15 +2,17 @@ package huxibianjie.com.lbscandroid.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.umeng.analytics.MobclickAgent;
+import com.zhy.autolayout.AutoLayoutActivity;
+
 import huxibianjie.com.lbscandroid.R;
 import huxibianjie.com.lbscandroid.WalkingActivity;
 
-public class StateActivity extends AppCompatActivity implements View.OnClickListener {
+public class StateActivity extends AutoLayoutActivity implements View.OnClickListener {
 
     /**
      * 开 始 挖 矿
@@ -44,5 +46,14 @@ public class StateActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
                 break;
         }
+    }
+    //session 统计
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

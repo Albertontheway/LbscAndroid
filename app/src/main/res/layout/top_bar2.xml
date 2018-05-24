@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/ll_top2"
         android:layout_width="match_parent"
-        android:paddingBottom="10px"
+        android:paddingBottom="7.5pt"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="70px"
+            android:layout_marginLeft="72px"
             android:orientation="vertical">
 
         </LinearLayout>

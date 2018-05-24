@@ -26,7 +26,8 @@ public class MyApplication extends Application {
         UMConfigure.init(this, "5afd4bacf29d9862e00000e2", "Umeng", UMConfigure.DEVICE_TYPE_PHONE,
                 null);
         MobclickAgent.setScenarioType(getApplicationContext(), MobclickAgent.EScenarioType.E_UM_NORMAL);
-    }
+
+            }
 
     public static Context getContext(){
         return context;

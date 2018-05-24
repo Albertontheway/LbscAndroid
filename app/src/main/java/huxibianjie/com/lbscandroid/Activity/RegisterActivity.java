@@ -6,13 +6,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
+import com.zhy.autolayout.AutoLayoutActivity;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -38,6 +37,7 @@ import butterknife.OnClick;
 import huxibianjie.com.lbscandroid.R;
 import huxibianjie.com.lbscandroid.WalkingActivity;
 import huxibianjie.com.lbscandroid.bean.PostLogin;
+import huxibianjie.com.lbscandroid.bean.SharePreference;
 import huxibianjie.com.lbscandroid.constant.HttpConstant;
 import huxibianjie.com.lbscandroid.constant.OkHttpClientManager;
 import huxibianjie.com.lbscandroid.util.AppUtils;
@@ -50,7 +50,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AutoLayoutActivity {
 
     @BindView(R.id.phonenumber)
     EditText mPhonenumber;
@@ -72,6 +72,11 @@ public class RegisterActivity extends AppCompatActivity {
     String phoneNums;
     private OkHttpClient client;
     private Object charSet;
+
+    SharePreference sharePreference = null;
+    Boolean isLogin = false;
+    Intent intent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +181,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //拼接字符串url
                 String loading_url =HttpConstant.POST_LOGIN+"?phone="+phoneNums+"&valicode="+code;
+                Log.e("onClick1: ",""+loading_url );
 
                 OkHttpClientManager.getAsyn(loading_url, new OkHttpClientManager.ResultCallback<String>() {
                     @Override
@@ -197,10 +203,15 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             });
                         }else {
-                            Intent intent = new Intent(RegisterActivity.this,
-                                    WalkingActivity.class);
-                            intent.putExtra(postLogin.getContent().getSeckey(), "userSeckey");
-                            startActivity(intent);
+                            sharePreference = new SharePreference(RegisterActivity.this);
+                            isLogin = sharePreference.getState();
+                            if (isLogin==false) {
+                                sharePreference.setState();//将登陆状态设置为true;
+                                Intent intent = new Intent(RegisterActivity.this,
+                                        WalkingActivity.class);
+                                Toast.makeText(RegisterActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                                startActivity(intent);
+                            }
                         }
 
                     }
@@ -402,28 +413,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-
-    private long exitTime = 0;//初始时间变量LONG
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-            } else {
-//                finish();
-//                System.exit(0);
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                startActivity(intent);
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
 
 
     @Override

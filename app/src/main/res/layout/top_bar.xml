@@ -19,35 +19,18 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="70px"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/linearLayout"
-                android:text="LBSC"
-                android:textColor="@color/white"
-                android:textSize="72px"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="行走中的区块链"
-                android:textColor="@color/white"
-                android:textSize="32px" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_marginTop="70px"
             android:layout_width="wrap_content"
-            android:layout_height="68px"
-            android:background="@mipmap/zichan"
+            android:layout_height="90px"
+            android:background="@drawable/shape_button_backgroud"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical|right"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="30dp">
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,7 +38,7 @@
                 android:orientation="vertical"
                 android:text="资产 "
                 android:textColor="@color/white"
-                android:textSize="38px" />
+                android:textSize="48px" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,7 +46,7 @@
                 android:orientation="vertical"
                 android:text="0.00"
                 android:textColor="@color/white"
-                android:textSize="36px" />
+                android:textSize="48px" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

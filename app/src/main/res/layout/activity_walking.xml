@@ -9,9 +9,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:alpha="0.9"
         android:orientation="vertical">
 
         <include layout="@layout/top_bar" />
+        <ImageView
+            android:id="@+id/share_imageButton"
+            android:layout_width="45dp"
+            android:layout_height="85px"
+            android:layout_gravity="right"
+            android:layout_marginBottom="-35dp"
+            android:padding="5dp"
+            android:layout_marginTop="15dp"
+            android:src="@mipmap/icon_fenxiang"
+            android:background="@drawable/shape_button_backgroud"
+             />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -39,7 +51,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/step_count"
+                        android:id="@+id/manry_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -52,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="步数"
+                        android:text="币数"
                         android:textColor="@color/white"
                         android:textSize="50px" />
                 </LinearLayout>
@@ -97,43 +109,39 @@
                         android:textColor="@color/white"
                         android:textSize="50px" />
                 </LinearLayout>
+
             </LinearLayout>
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/share_imageButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="right"
-            android:layout_marginBottom="-30dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:alpha="1"
-            android:src="@mipmap/icon_fenxiang" />
+
 
         <TextView
-            android:id="@+id/manry_count"
-            android:text="8888"
+            android:id="@+id/step_count"
+            android:text="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/white"
             android:textSize="200px" />
 
-        <ImageView
+        <Button
             android:id="@+id/Calculation_Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="360px"
+            android:text="提交"
+            android:textSize="48px"
+            android:textStyle="bold"
+            android:layout_margin="30dp"
+            android:layout_height="90px"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="20dp"
-            android:src="@mipmap/submission_button"
+android:background="@drawable/shape_button_tijiao"
              />
     </LinearLayout>
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:background="#212121"
-    android:layout_height="82px">
+    android:background="#000000"
+    android:alpha="0.7"
+    android:layout_height="90px">
     <TextView
         android:text="名字"
         android:textSize="44px"
@@ -142,6 +150,7 @@
         android:textColor="@color/white"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:alpha="1"
         android:layout_height="wrap_content" />
 
     <TextView
@@ -152,6 +161,7 @@
         android:textColor="@color/white"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:alpha="1"
         android:layout_height="wrap_content" />
 
     <TextView
@@ -162,6 +172,7 @@
         android:textColor="@color/white"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:alpha="1"
         android:layout_height="wrap_content" />
 
     <TextView
@@ -172,18 +183,16 @@
         android:textColor="@color/white"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:alpha="1"
         android:layout_height="wrap_content" />
 </LinearLayout>
-    <ScrollView
-        android:layout_width="wrap_content"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:background="#1b1b1b"
+        android:alpha="0.7"
+        />
 
-        <RelativeLayout
-            android:id="@+id/Relativelist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"></RelativeLayout>
-
-    </ScrollView>
 </LinearLayout>

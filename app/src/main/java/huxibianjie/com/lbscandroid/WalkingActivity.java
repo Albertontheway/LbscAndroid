@@ -15,26 +15,36 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.okhttp.Request;
 import com.umeng.analytics.MobclickAgent;
+import com.zhy.autolayout.AutoLayoutActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import huxibianjie.com.lbscandroid.Activity.RegisterActivity;
+import huxibianjie.com.lbscandroid.Adapart.MyAdapter;
+import huxibianjie.com.lbscandroid.Adapart.UserNumber;
+import huxibianjie.com.lbscandroid.bean.SharePreference;
 import huxibianjie.com.lbscandroid.bean.TimeUtils;
 import huxibianjie.com.lbscandroid.constant.HttpConstant;
 import huxibianjie.com.lbscandroid.constant.OkHttpClientManager;
@@ -47,7 +57,7 @@ import huxibianjie.com.lbscandroid.util.DensityUtil;
  * Created by adu on 2016/10/21.
  */
 
-public class WalkingActivity extends AppCompatActivity implements Handler.Callback {
+public class WalkingActivity extends AutoLayoutActivity implements Handler.Callback {
 
     //@BindView(R.id.rl_Right) RelativeLayout rlRight;
     @BindView(R.id.ll_top)
@@ -63,14 +73,12 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
 
     public static final String WALKCAMPID = "walkCampId";
 
-    @BindView(R.id.Relativelist)
-    RelativeLayout mRelativelist;
     @BindView(R.id.share_imageButton)
     ImageView mShareImageButton;
     @BindView(R.id.manry_count)
     TextView mManryCount;
     @BindView(R.id.Calculation_Button)
-    ImageView mCalculationButton;
+    Button mCalculationButton;
     private long stepnumber = 0;
     private long lastStep = 0;
     private boolean isPause = false;
@@ -96,6 +104,14 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
 
         }
     };
+    RecyclerView mRecyclerView;
+    LinearLayoutManager mLayoutManager;
+    MyAdapter mAdapter;
+    List<UserNumber.ContentBeanX.ContentBean> data = new ArrayList<UserNumber.ContentBeanX.ContentBean>();
+
+    SharePreference sharePreference = null;
+    Boolean isLogin = false;
+    Intent intent;
 
     ServiceConnection conn = new ServiceConnection() {
         @Override
@@ -121,9 +137,41 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_walking);
         ButterKnife.bind(this);
-//        mCalculationButton.setAlpha(0.5f);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv);
+// use this setting to improve performance if you know that changes
+// in content do not change the layout size of the RecyclerView
+// use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mLayoutManager.setReverseLayout(false);//true 从底部开始填充子视图
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        initData();
         initView();
         TimeUtils.getNowTime();
+    }
+
+    private void initData() {
+        data.clear();
+        String userNum_url = "http://182.92.99.198:8081/hp/api/user/sort";
+        OkHttpClientManager.getAsyn(userNum_url, new OkHttpClientManager.ResultCallback<String>() {
+            @Override
+            public void onError(Request request, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(String response) {
+                Log.e("TAG", "onResponse: " + response.toString());
+                Gson gson = new Gson();
+                UserNumber userNumber = gson.fromJson(response, UserNumber.class);
+                List<UserNumber.ContentBeanX.ContentBean> content = userNumber.getContent().getContent();
+
+                data.addAll(content);
+                Log.e("TAG", "onResponse: " + data.size() + "");
+                mAdapter = new MyAdapter(WalkingActivity.this, data);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        });
     }
 
 
@@ -154,7 +202,7 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
         switch (msg.what) {
 
             case Constant.Config.MSG_FROM_SERVER:
-                stepnumber = Long.valueOf(String.valueOf(msg.getData().get(Constant.Config.stepNum))) - lastStep / 2;
+                stepnumber = Long.valueOf(String.valueOf(msg.getData().get(Constant.Config.stepNum))) + lastStep / 2;
                 int money = 100;
                 if (stepnumber != 0) {
 
@@ -253,19 +301,19 @@ public class WalkingActivity extends AppCompatActivity implements Handler.Callba
     }
 
 
+
+
     //点击事件，历史记录，排行榜，listview
-    @OnClick({R.id.Relativelist,R.id.Calculation_Button})
+    @OnClick({R.id.Calculation_Button})
     public void onClick(View v) {
         switch (v.getId()) {
             default:
                 break;
-
-            case R.id.Relativelist:
-                break;
-
             case R.id.Calculation_Button:
-                if (true){
-                    Intent intent = new Intent(this, RegisterActivity.class);
+                sharePreference = new SharePreference(WalkingActivity.this);
+                isLogin = sharePreference.getState();
+                if (!isLogin) {
+                    intent = new Intent(WalkingActivity.this, RegisterActivity.class);
                     startActivity(intent);
                 }
                 break;
