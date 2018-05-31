@@ -54,4 +54,8 @@ dependencies {
     compile 'com.jcodecraeer:xrecyclerview:1.3.2'
 
     compile 'com.zhy:autolayout:1.4.5'
+
+    //定位
+    compile 'com.amap.api:location:latest.integration'
+
 }

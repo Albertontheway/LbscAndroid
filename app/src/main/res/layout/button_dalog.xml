@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_dalog">
+
+    <RelativeLayout
+        android:layout_width="750px"
+        android:layout_height="840px"
+        android:background="@mipmap/dalog_show">
+
+        <ImageView
+            android:id="@+id/delete_show"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp" 
+            android:src="@mipmap/del_button" />
+
+        <Button
+            android:id="@+id/up_show"
+            android:text="上传位置"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:background="@drawable/shangchuan_button"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="30dp"
+            android:layout_width="645px"
+            android:layout_height="98px" />
+
+    </RelativeLayout>
+</LinearLayout>

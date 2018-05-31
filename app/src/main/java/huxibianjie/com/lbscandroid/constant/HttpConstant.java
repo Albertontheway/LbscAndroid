@@ -19,4 +19,7 @@ public class HttpConstant {
     public static String POST_LOGIN = URL + "user/login";
     //提交数据
     public static String POST_SEVEDATES = URL + "daily/create";
+    //首页排行榜
+    //95079211322
+    public static String GET_USER_RANKINGS=URL + "user/sort";
 }

@@ -9,15 +9,15 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class TimeUtils {
-        
-    /**    
+
+    /**
      * 获取当前时间    
      * @return    
      */        
     public static String getNowTime(){        
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
-        Log.e("当前时间-----",""+date.toString());
+
         return simpleDateFormat.format(date);        
     }        
     /**    
@@ -26,7 +26,7 @@ public class TimeUtils {
      * @return 获取时间戳    
      */        
     public static String getTimeString() {        
-        SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");        
+        SimpleDateFormat df = new SimpleDateFormat("MMddHHmmss");
         Calendar calendar = Calendar.getInstance();
         return df.format(calendar.getTime());        
     }        

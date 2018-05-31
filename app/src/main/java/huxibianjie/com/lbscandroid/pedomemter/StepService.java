@@ -261,7 +261,7 @@ public class StepService extends Service {
         int tempStep = StepDetector.CURRENT_SETP;
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Constant.Config.stepNum, tempStep);
-       // editor.commit();
+        editor.commit();
 
         Log.v("xf", "sp.putInt: " + "---CURRENTDATE: " + CURRENTDATE + "---tempStep: " + tempStep);
     }

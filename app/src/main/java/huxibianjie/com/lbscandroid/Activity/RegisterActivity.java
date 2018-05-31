@@ -2,10 +2,12 @@ package huxibianjie.com.lbscandroid.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -42,6 +44,7 @@ import huxibianjie.com.lbscandroid.constant.HttpConstant;
 import huxibianjie.com.lbscandroid.constant.OkHttpClientManager;
 import huxibianjie.com.lbscandroid.util.AppUtils;
 import huxibianjie.com.lbscandroid.util.DensityUtil;
+import huxibianjie.com.lbscandroid.util.NetUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -72,8 +75,9 @@ public class RegisterActivity extends AutoLayoutActivity {
     String phoneNums;
     private OkHttpClient client;
     private Object charSet;
-
+    private boolean netConnected;
     SharePreference sharePreference = null;
+    SharedPreferences sp;
     Boolean isLogin = false;
     Intent intent;
 
@@ -83,6 +87,7 @@ public class RegisterActivity extends AutoLayoutActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
+        sp = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
         initView();
         initOkHttp();
     }
@@ -109,6 +114,7 @@ public class RegisterActivity extends AutoLayoutActivity {
 
     @OnClick({R.id.phonenumber, R.id.del_phonenumber, R.id.phone_code, R.id.get_code, R.id.Register_button})
     public void onClick1(View v) {
+
         Intent intent;
         phoneNums = mPhonenumber.getText().toString();
         switch (v.getId()) {
@@ -126,6 +132,15 @@ public class RegisterActivity extends AutoLayoutActivity {
 //                break;
 
             case R.id.get_code:
+                if (NetUtil.isNetConnected(this)) netConnected = true;
+                else netConnected = false;
+                if (!netConnected){
+                Toast.makeText(this, "当前网络异常", Toast.LENGTH_SHORT).show();
+                mGetCode.setClickable(false);
+                return;
+            }else {
+                    mGetCode.setClickable(true);
+                }
                 // 1. 通过规则判断手机号
                 if (!judgePhoneNums(phoneNums)) {
                     return;
@@ -138,6 +153,7 @@ public class RegisterActivity extends AutoLayoutActivity {
                         .url(HttpConstant.POST_SENTCODE)
                         .post(requestBodyPostcode)
                         .build();
+
                 client.newCall(requestPostcode).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -173,6 +189,13 @@ public class RegisterActivity extends AutoLayoutActivity {
                 break;
 
             case R.id.Register_button:
+                if (!netConnected){
+                    Toast.makeText(this, "当前网络异常", Toast.LENGTH_SHORT).show();
+                    mRegisterButton.setClickable(false);
+                    return;
+                }else {
+                    mRegisterButton.setClickable(true);
+                }
                 //将收到的验证码和手机号提交再次核对
 //                SMSSDK.submitVerificationCode("86", phoneNums, mPhoneCode.getText().toString());
 //                createProgressBar();
@@ -195,6 +218,11 @@ public class RegisterActivity extends AutoLayoutActivity {
                         Gson gson = new Gson();
                         PostLogin postLogin = gson.fromJson(response, PostLogin.class);
                         String errmsg = postLogin.getErrmsg();
+                        String SECKEY = postLogin.getContent().getSeckey();
+                        String mphone = mPhonenumber.getText().toString();
+                        sp.edit().putString("getSeckey",SECKEY).commit();
+                        sp.edit().putString("UserNumber",mphone).commit();
+                        Log.e("SECKEY-----",sp.getString("getSeckey","") );
                         if (!errmsg.equals("OK")) {
                             runOnUiThread(new Runnable() {
                                 @Override
